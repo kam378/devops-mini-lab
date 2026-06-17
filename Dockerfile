@@ -1,14 +1,17 @@
-FROM python:3.10-slim
+name: DevOps CI Pipeline
 
-WORKDIR /app
+on: [push]
 
-COPY calculator.py ./
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-# Install Flask so our web app can run
-RUN pip install flask
+      - name: Build Docker Image
+        run: docker build -t my-calculator-app .
 
-# Expose port 5000 so we can access the web server
-EXPOSE 5000
-
-# Change the default command to start our web server instead of running tests
-CMD ["python", "calculator.py"]
+      # 👇 We add "pytest" here to override the server startup and just test!
+      - name: Run Tests inside Docker
+        run: docker run my-calculator-app pytest test_calculator.py
