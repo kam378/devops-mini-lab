@@ -9,10 +9,8 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 1. Build the Docker container using our Dockerfile blueprint
       - name: Build Docker Image
         run: docker build -t my-calculator-app .
 
-      # 2. Run the container and execute the tests inside it
       - name: Run Tests inside Docker
-        run: docker run my-calculator-app
+        run: docker run my-calculator-app pytest test_calculator.py
